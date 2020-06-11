@@ -21,22 +21,11 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-
-        try {
-            $this->validate($request, [
-
+        $this->validate($request, [
                 'username' => 'required',
                 'password' => 'required'
 
             ]);
-        } catch (ValidationException $e) {
-            if ($e->getCode()==400){
-                return response()->json(
-                    ['error'=>'Check your Credentials'],
-                    400);
-            }
-        }
-
         return $this->issueToken($request,'password');
 
     }
@@ -50,5 +39,15 @@ class LoginController extends Controller
 
         $accessToken->revoke();
         return response()->json('Logged Out Successfully',204);
+    }
+
+    public function refresh(Request $request)
+    {
+        $this->validate($request, [
+            'refresh_token' => 'required'
+
+        ]);
+        return $this->issueToken($request,'refresh_token');
+
     }
 }
