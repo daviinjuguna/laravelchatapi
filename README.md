@@ -22,4 +22,9 @@ MAIL_ENCRYPTION=null,
 MAIL_FROM_ADDRESS=**some random mail**,
 MAIL_FROM_NAME="${APP_NAME}",
 
-use mailtrap for reseting password and run php artisan queue:work 
+
+run migration ie php artisan migrate.
+
+run php artisan queue:work 
+
+run php artisan serve
