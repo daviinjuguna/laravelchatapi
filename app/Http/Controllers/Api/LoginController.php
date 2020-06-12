@@ -5,7 +5,6 @@ namespace App\Http\Controllers\Api;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Validation\ValidationException;
 use Laravel\Passport\Client;
 use Illuminate\Http\Request;
 
@@ -21,12 +20,21 @@ class LoginController extends Controller
 
     public function login(Request $request)
     {
-        $this->validate($request, [
-                'username' => 'required',
+        $credentials = $this->validate($request, [
+                'email' => 'required',
                 'password' => 'required'
 
             ]);
-        return $this->issueToken($request,'password');
+        $authAttempt = Auth::attempt($credentials);
+        if (!$authAttempt){
+            return response([
+                'error'=>'forbidden',
+                'message'=>'Check your Credentials'
+            ],403);
+        }else{
+            return $this->issueToken($request,'password');
+
+        }
 
     }
 

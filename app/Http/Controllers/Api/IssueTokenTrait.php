@@ -14,7 +14,7 @@ trait IssueTokenTrait{
             'grant_type' => $grantType,
             'client_id' => $this->client->id,
             'client_secret' => $this->client->secret,
-            'username' => $request->username ?: $request->email,
+            'username' => $request->email,
             'password' => request('password'),
             'scope' => $scope
         ];
