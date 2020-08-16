@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
-use App\Http\Resources\RegistrationResource;
+use App\Http\Resources\UserResource;
 use Illuminate\Http\Request;
 use App\User;
 use Illuminate\Support\Facades\Hash;
@@ -34,7 +34,7 @@ class RegisterController extends Controller
             'password'=>Hash::make($request['password'])
         ]);
 
-        return $this->issueToken($request,'password');
-
+        $this->issueToken($request,'password');
+        return new UserResource($user);
     }
 }

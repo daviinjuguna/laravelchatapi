@@ -34,8 +34,8 @@ class ConversationController extends Controller
             }
         }*/
 
+        //return new ConversationResource($conversations);
         return ConversationResource::collection($conversations);
-        //return ConversationResource($conversations);
 
     }
 
