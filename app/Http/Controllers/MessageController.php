@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Conversation;
 use App\Http\Requests\MessageRequest;
+use App\Http\Resources\ConversationResource;
 use App\Http\Resources\MessageResource;
 use App\Message;
 use Illuminate\Http\Request;
@@ -27,11 +29,28 @@ class  MessageController extends Controller
         $messages = new Message();
         $messages->body = $request['body'];
         $messages->read = false;
-        $messages->user_id = $request['user_id'];
+        $messages->user_id = 2;
         $messages->conversation_id = $request['conversation_id'];
 
         $messages->save();
-        return new MessageResource($messages);
+        new MessageResource($messages);
+
+        $conversations = Conversation::where('user_id',auth()->user()->id)
+            ->orWhere('second_user_id',auth()->user()->id)
+            ->orderBy('updated_at', 'desc')
+            ->get();
+        $count = count($conversations);
+
+        for ($i = 0; $i < $count; $i++){
+            for ($j = $i+1; $j < $count; $j++){
+                if ($conversations[$i]->messages->last()->id < $conversations[$j]->messages->last()->id){
+                    $temp = $conversations[$i];
+                    $conversations[$i] = $conversations[$j];
+                    $conversations[$j] = $temp;
+                }
+            }
+        }
+        return ConversationResource::collection($conversations);
 
     }
 

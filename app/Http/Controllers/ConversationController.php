@@ -6,7 +6,6 @@ use App\Conversation;
 use App\Http\Resources\ConversationResource;
 use App\Message;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Auth;
 
 class ConversationController extends Controller
 {
@@ -17,10 +16,10 @@ class ConversationController extends Controller
      */
     public function index()
     {
-       $conversations = Conversation::all();
-       /* $conversations = DB::table('conversations')->where('user_id',Auth::user()->id)
-            ->orWhere('second_user_id',Auth::user()->id)
-            ->orderBy('updated_at','desc')
+//       $conversations = Conversation::all();
+        $conversations = Conversation::where('user_id',auth()->user()->id)
+            ->orWhere('second_user_id',auth()->user()->id)
+            ->orderBy('updated_at', 'desc')
             ->get();
         $count = count($conversations);
 
@@ -32,9 +31,9 @@ class ConversationController extends Controller
                     $conversations[$j] = $temp;
                 }
             }
-        }*/
+        }
 
-        //return new ConversationResource($conversations);
+//        return new ConversationResource($conversations);
         return ConversationResource::collection($conversations);
 
     }
@@ -77,13 +76,13 @@ class ConversationController extends Controller
             'message'=>'required'
         ]);
         $conversation = Conversation::create([
-            'user_id'=>Auth::user()->id,
+            'user_id'=>auth()->user()->id,
             'second_user_id'=>$request['user_id'],
 
         ]);
         Message::create([
             'body'=>$request['message'],
-            'user_id'=>Auth::user()->id,
+            'user_id'=>auth()->user()->id,
             'conversation_id'=>$conversation->id,
             'read'=>false,
 
