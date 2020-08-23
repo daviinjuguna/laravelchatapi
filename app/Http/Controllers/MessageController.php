@@ -28,8 +28,8 @@ class  MessageController extends Controller
         //
         $messages = new Message();
         $messages->body = $request['body'];
-        $messages->read = false;
-        $messages->user_id = 2;
+        $messages->read = 0;
+        $messages->user_id = auth()->user()->id;
         $messages->conversation_id = $request['conversation_id'];
 
         $messages->save();
