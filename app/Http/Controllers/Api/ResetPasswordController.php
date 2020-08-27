@@ -44,6 +44,7 @@ class ResetPasswordController extends Controller
             }
         }
         $user->pin = $pin;//save pin to database
+        $user->pin=null;//set pin to null after using it
         $user->save();
 
         Mail::to($user)->queue(new UserPasswordPin($pin));

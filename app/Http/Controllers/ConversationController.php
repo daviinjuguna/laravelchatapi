@@ -34,7 +34,7 @@ class ConversationController extends Controller
         }
 
 //        return new ConversationResource($conversations);
-        return ConversationResource::collection($conversations);
+        return ConversationResource::collection($conversations)->all();
 
     }
 
@@ -88,7 +88,30 @@ class ConversationController extends Controller
 
         ]);
 
-        return new ConversationResource($conversation);
+        new ConversationResource($conversation);
+
+//        return response()->json([
+//            $conversation
+//        ]);
+
+        $conversations = Conversation::where('user_id',auth()->user()->id)
+            ->orWhere('second_user_id',auth()->user()->id)
+            ->orderBy('updated_at', 'desc')
+            ->get();
+        $count = count($conversations);
+
+        for ($i = 0; $i < $count; $i++){
+            for ($j = $i+1; $j < $count; $j++){
+                if ($conversations[$i]->messages->last()->id < $conversations[$j]->messages->last()->id){
+                    $temp = $conversations[$i];
+                    $conversations[$i] = $conversations[$j];
+                    $conversations[$j] = $temp;
+                }
+            }
+        }
+
+//        return new ConversationResource($conversations);
+        return ConversationResource::collection($conversations)->all();
 
     }
 

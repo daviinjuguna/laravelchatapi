@@ -34,7 +34,7 @@ class RegisterController extends Controller
             'password'=>Hash::make($request['password'])
         ]);
 
-        $this->issueToken($request,'password');
-        return new UserResource($user);
+        return $this->issueToken($request,'password');
+//        return new UserResource($user);
     }
 }

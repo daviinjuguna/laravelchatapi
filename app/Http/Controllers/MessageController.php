@@ -34,23 +34,26 @@ class  MessageController extends Controller
 
         $messages->save();
         new MessageResource($messages);
+        return response()->json(
+            $messages
+        );
 
-        $conversations = Conversation::where('user_id',auth()->user()->id)
-            ->orWhere('second_user_id',auth()->user()->id)
-            ->orderBy('updated_at', 'desc')
-            ->get();
-        $count = count($conversations);
-
-        for ($i = 0; $i < $count; $i++){
-            for ($j = $i+1; $j < $count; $j++){
-                if ($conversations[$i]->messages->last()->id < $conversations[$j]->messages->last()->id){
-                    $temp = $conversations[$i];
-                    $conversations[$i] = $conversations[$j];
-                    $conversations[$j] = $temp;
-                }
-            }
-        }
-        return ConversationResource::collection($conversations);
+//        $conversations = Conversation::where('user_id',auth()->user()->id)
+//            ->orWhere('second_user_id',auth()->user()->id)
+//            ->orderBy('updated_at', 'desc')
+//            ->get();
+//        $count = count($conversations);
+//
+//        for ($i = 0; $i < $count; $i++){
+//            for ($j = $i+1; $j < $count; $j++){
+//                if ($conversations[$i]->messages->last()->id < $conversations[$j]->messages->last()->id){
+//                    $temp = $conversations[$i];
+//                    $conversations[$i] = $conversations[$j];
+//                    $conversations[$j] = $temp;
+//                }
+//            }
+//        }
+//        return ConversationResource::collection($conversations)->all();
 
     }
 
